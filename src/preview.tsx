@@ -1,10 +1,9 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import { Loading } from '@alifd/next';
-import { buildComponents, assetBundle, AssetLevel, AssetLoader } from '@alilc/lowcode-utils';
+import { buildComponents, AssetLoader } from '@alilc/lowcode-utils';
 import ReactRenderer from '@alilc/lowcode-react-renderer';
 import { injectComponents } from '@alilc/lowcode-plugin-inject';
-import { createFetchHandler } from '@alilc/lowcode-datasource-fetch-handler'
 
 import { getPreviewSchema } from './services';
 
@@ -43,11 +42,9 @@ const SamplePreview = () => {
   async function init() {
 
     const { schema, componentsMap, libraryAsset, libraryMap } = await getPreviewSchema();
-    const vendors = [assetBundle(libraryAsset, AssetLevel.Library)];
     const assetLoader = new AssetLoader();
     await assetLoader.load(libraryAsset);
     const components = await injectComponents(buildComponents(libraryMap, componentsMap));
-    console.log(schema, componentsMap, assetLoader, components)
     setData({
       schema,
       components,
@@ -67,11 +64,6 @@ const SamplePreview = () => {
         className="lowcode-plugin-sample-preview-content"
         schema={schema}
         components={components}
-        appHelper={{
-          requestHandlersMap: {
-            fetch: createFetchHandler()
-          }
-        }}
       />
     </div>
   );
