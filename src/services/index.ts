@@ -6,10 +6,6 @@ import packages from './common-package.json';
 
 import { ComponentInfo, MaterialInfo } from '../../types'
 
-const queryParams = new URLSearchParams(window.location.search)
-
-const className = queryParams.get('className')
-
 export const loadAssets = async () => {
     const response = await fetch('/fastball-editor/api/assets');
     const materials: MaterialInfo[] = await response.json();
@@ -74,7 +70,7 @@ export const resetSchema = async () => {
     Message.success('成功重置页面');
 }
 
-export const getComponentSchema = async () => {
+export const getComponentSchema = async (className?: string) => {
     const loadConfigResp = await fetch(`/fastball-editor/api/load-view?className=${className}`);
     const schema = await loadConfigResp.json();
     return schema;
@@ -112,8 +108,8 @@ export const getCodeGenSchema = async () => {
     }
 }
 
-export const getPreviewSchema = async () => {
-    const componentSchema = await getComponentSchema();
+export const getPreviewSchema = async (className?: string) => {
+    const componentSchema = await getComponentSchema(className);
     const schema: ComponentInfo = {
         "componentName": "Page",
         "children": [componentSchema],

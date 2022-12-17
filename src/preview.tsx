@@ -7,7 +7,10 @@ import { injectComponents } from '@alilc/lowcode-plugin-inject';
 
 import { getPreviewSchema } from './services';
 
+
 const queryParams = new URLSearchParams(window.location.search)
+
+const className = queryParams.get('className')
 
 const proxyTarget: string | null = queryParams.get('proxyTarget')
 
@@ -36,12 +39,12 @@ window.fetch = (input: RequestInfo | URL | string, init?: RequestInit): Promise<
   return origanlFetch(input, init);
 }
 
-const SamplePreview = () => {
+const SamplePreview = ({ componentClassName, ...props }) => {
   const [data, setData] = useState({});
 
   async function init() {
 
-    const { schema, componentsMap, libraryAsset, libraryMap } = await getPreviewSchema();
+    const { schema, componentsMap, libraryAsset, libraryMap } = await getPreviewSchema(componentClassName);
     const assetLoader = new AssetLoader();
     await assetLoader.load(libraryAsset);
     const components = await injectComponents(buildComponents(libraryMap, componentsMap));
@@ -58,6 +61,12 @@ const SamplePreview = () => {
     return <Loading fullScreen />;
   }
 
+  console.log(componentClassName, schema)
+
+  if(schema.children[0]?.props) {
+    Object.assign(schema.children[0].props, props)
+  }
+
   return (
     <div className="lowcode-plugin-sample-preview">
       <ReactRenderer
@@ -69,4 +78,6 @@ const SamplePreview = () => {
   );
 };
 
-ReactDOM.render(<SamplePreview />, document.getElementById('ice-container'));
+window.PreviewComponent = SamplePreview
+
+ReactDOM.render(<SamplePreview componentClassName={className}/>, document.getElementById('ice-container'));
