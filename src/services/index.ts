@@ -5,6 +5,9 @@ import { Message, Dialog } from '@alifd/next';
 import packages from './common-package.json';
 
 import { ComponentInfo, MaterialInfo } from '../../types'
+const queryParams = new URLSearchParams(window.location.search)
+
+const pageClassName = queryParams.get('className')
 
 export const loadAssets = async () => {
     const response = await fetch('/fastball-editor/api/assets');
@@ -71,7 +74,7 @@ export const resetSchema = async () => {
 }
 
 export const getComponentSchema = async (className?: string) => {
-    const loadConfigResp = await fetch(`/fastball-editor/api/load-view?className=${className}`);
+    const loadConfigResp = await fetch(`/fastball-editor/api/load-view?className=${className || pageClassName}`);
     const schema = await loadConfigResp.json();
     return schema;
 }

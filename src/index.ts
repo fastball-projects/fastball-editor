@@ -1,6 +1,7 @@
 import { init, plugins } from '@alilc/lowcode-engine';
 import { createFetchHandler } from '@alilc/lowcode-datasource-fetch-handler'
 import customPlugins from './plugins/';
+import SamplePreview from './common';
 import './global.scss';
 
 async function registerPlugins() {
@@ -8,6 +9,8 @@ async function registerPlugins() {
     await plugins.register(p)
   })
 }
+
+window.PreviewComponent = SamplePreview;
 
 (async function main() {
   await registerPlugins();

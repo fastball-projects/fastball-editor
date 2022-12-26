@@ -1,12 +1,5 @@
 import ReactDOM from 'react-dom';
-import React, { useState } from 'react';
-import { Loading } from '@alifd/next';
-import { buildComponents, AssetLoader } from '@alilc/lowcode-utils';
-import ReactRenderer from '@alilc/lowcode-react-renderer';
-import { injectComponents } from '@alilc/lowcode-plugin-inject';
-
-import { getPreviewSchema } from './services';
-
+import SamplePreview from './common';
 
 const queryParams = new URLSearchParams(window.location.search)
 
@@ -39,45 +32,6 @@ window.fetch = (input: RequestInfo | URL | string, init?: RequestInit): Promise<
   return origanlFetch(input, init);
 }
 
-const SamplePreview = ({ componentClassName, ...props }) => {
-  const [data, setData] = useState({});
-
-  async function init() {
-
-    const { schema, componentsMap, libraryAsset, libraryMap } = await getPreviewSchema(componentClassName);
-    const assetLoader = new AssetLoader();
-    await assetLoader.load(libraryAsset);
-    const components = await injectComponents(buildComponents(libraryMap, componentsMap));
-    setData({
-      schema,
-      components,
-    });
-  }
-
-  const { schema, components } = data;
-
-  if (!schema || !components) {
-    init();
-    return <Loading fullScreen />;
-  }
-
-  console.log(componentClassName, schema)
-
-  if(schema.children[0]?.props) {
-    Object.assign(schema.children[0].props, props)
-  }
-
-  return (
-    <div className="lowcode-plugin-sample-preview">
-      <ReactRenderer
-        className="lowcode-plugin-sample-preview-content"
-        schema={schema}
-        components={components}
-      />
-    </div>
-  );
-};
-
 window.PreviewComponent = SamplePreview
 
-ReactDOM.render(<SamplePreview componentClassName={className}/>, document.getElementById('ice-container'));
+ReactDOM.render(<SamplePreview componentClassName={className} />, document.getElementById('ice-container'));
