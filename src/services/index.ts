@@ -41,7 +41,7 @@ export const loadAssets = async () => {
 export const saveSchema = async () => {
     // need save component is fisrt child....
     const componentSchema = project.exportSchema(TransformStage.Save)?.componentsTree?.[0]?.children[0];
-    const response = await fetch(`/fastball-editor/api/save-view?className=${className}`, {
+    const response = await fetch(`/fastball-editor/api/save-view?className=${pageClassName}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -22,13 +22,12 @@ const SamplePreview = ({ componentClassName, ...props }) => {
         const unloadAsset: string[] = []
         libraryAsset.forEach(asset => {
             if (!loadedAsset[asset]) {
-                loadedAsset[asset] = true
                 unloadAsset.push(asset);
             }
         });
         const assetLoader = new AssetLoader();
         await assetLoader.load(unloadAsset);
-        console.log("preivew", libraryMap, componentsMap)
+        unloadAsset.forEach(asset => loadedAsset[asset] = true)
         const components = await injectComponents(buildComponents(libraryMap, componentsMap));
         if (!components[schema.children[0].componentName]) {
             return
